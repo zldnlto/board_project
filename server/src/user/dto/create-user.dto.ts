@@ -1,12 +1,5 @@
-import { IsString, IsEmail } from 'class-validator';
-
 export class CreateUserDto {
-  @IsString()
-  username: string;
-
-  @IsEmail()
+  name: string;
   email: string;
-
-  @IsString()
-  password: string;
+  passwordHash: string; // 이미 해싱된 비밀번호
 }
