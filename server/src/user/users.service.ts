@@ -25,7 +25,7 @@ export class UsersService {
   // GET/users/:id 특정 유저 조회
   async findOneById(id: number): Promise<UserResponseDto> {
     const user = await this.prisma.user.findUnique({
-      where: { id },
+      where: { id: Number(id) },
     });
 
     if (!user) {

@@ -9,37 +9,37 @@ import {
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { UserResponseDto } from './dto/user-response.dto';
 import { PartialUpdateUserDto } from './dto/update-user-partial.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // 회원 가입 (POST /users)
-  @Post()
-  @ApiOperation({ summary: '회원가입' })
-  @ApiResponse({
-    status: 201,
-    description: '유저가 성공적으로 생성되었습니다.',
-    type: UserResponseDto,
-  })
-  async createUser(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<UserResponseDto> {
-    const user = await this.usersService.create(createUserDto);
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      createdAt: user.createdAt,
-    };
-  }
+  // // 회원 가입 (POST /users)
+  // @Post()
+  // @ApiOperation({ summary: '회원가입' })
+  // @ApiResponse({
+  //   status: 201,
+  //   description: '유저가 성공적으로 생성되었습니다.',
+  //   type: UserResponseDto,
+  // })
+  // async createUser(
+  //   @Body() createUserDto: CreateUserDto,
+  // ): Promise<UserResponseDto> {
+  //   const user = await this.usersService.create(createUserDto);
+  //   return {
+  //     id: user.id,
+  //     username: user.username,
+  //     email: user.email,
+  //     createdAt: user.createdAt,
+  //   };
+  // }
 
   // 전체 유저 조회 (GET /users)
   @Get()
@@ -61,8 +61,8 @@ export class UsersController {
     description: '특정 유저의 정보가 반환됩니다.',
     type: UserResponseDto,
   })
-  async getUserById(@Param('id') id: number): Promise<UserResponseDto> {
-    return this.usersService.findOneById(id);
+  async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
+    return this.usersService.findOneById(Number(id));
   }
 
   // 특정 유저 정보 전체 수정 (PUT /users/:id)
@@ -73,11 +73,12 @@ export class UsersController {
     description: '유저 정보가 성공적으로 수정되었습니다.',
     type: UserResponseDto,
   })
+  @ApiBody({ type: UpdateUserDto })
   async updateUser(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserResponseDto> {
-    return this.usersService.update(id, updateUserDto);
+    return this.usersService.update(Number(id), updateUserDto);
   }
 
   // 특정 유저 정보 일부 수정 (PATCH /users/:id)
