@@ -1,8 +1,8 @@
 // src/posts/posts.controller.ts
 import { Controller, Get } from '@nestjs/common';
-import { PostsService } from './posts.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-@ApiTags('Posts (게시글 관련 API)')
+import { PostsService } from './posts.service';
+@ApiTags('Posts')
 @Controller('posts')
 export class PostsController {
   constructor(private postsService: PostsService) {}

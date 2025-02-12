@@ -1,5 +1,5 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString, MinLength } from 'class-validator';
 
 // NOTE - 전체 유저 정보를 업데이트할 때 사용 (PUT)
 // 모든 항목 입력받아야 하므로 필수 필드로 지정한다
