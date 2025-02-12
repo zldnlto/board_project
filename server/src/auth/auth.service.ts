@@ -88,8 +88,16 @@ export class AuthService {
     this.logger.log(`✅ [LOGIN SUCCESS] 로그인 성공 - user ID: ${user.id}`);
 
     const payload = { id: user.id, email: user.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    console.log(`🟢 [JWT PAYLOAD] ${JSON.stringify(payload)}`);
+
+    try {
+      const accessToken = this.jwtService.sign(payload);
+      this.logger.log(`🟢 [JWT GENERATED] ${accessToken}`);
+
+      return { access_token: accessToken };
+    } catch (error) {
+      console.error(`🔴 [JWT SIGN ERROR] ${error.message}`);
+      throw new UnauthorizedException('JWT 생성 중 오류가 발생했습니다.');
+    }
   }
 }
