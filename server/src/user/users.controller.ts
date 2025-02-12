@@ -89,15 +89,15 @@ export class UsersController {
     type: UserResponseDto,
   })
   async partialUpdateUser(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() partialUpdateUserDto: PartialUpdateUserDto,
   ): Promise<UserResponseDto> {
-    return this.usersService.partialUpdate(id, partialUpdateUserDto);
+    return this.usersService.partialUpdate(Number(id), partialUpdateUserDto);
   }
 
   // 특정 유저 삭제 (DELETE /users/:id)
   @Delete(':id')
-  @ApiOperation({ summary: '특정 유저 삭제 (관리자 전용)' })
+  @ApiOperation({ summary: '특정 유저 삭제' })
   @ApiResponse({
     status: 200,
     description: '유저가 성공적으로 삭제되었습니다.',
@@ -106,7 +106,7 @@ export class UsersController {
     status: 404,
     description: '유저를 찾을 수 없습니다.',
   })
-  async deleteUser(@Param('id') id: number): Promise<{ message: string }> {
-    return this.usersService.delete(id);
+  async deleteUser(@Param('id') id: string): Promise<{ message: string }> {
+    return this.usersService.delete(Number(id));
   }
 }
