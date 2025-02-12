@@ -7,17 +7,25 @@ import {
   Patch,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-// import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';
 
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PartialUpdateUserDto } from './dto/update-user-partial.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 
-@ApiTags('users')
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -68,6 +76,7 @@ export class UsersController {
 
   // 특정 유저 정보 전체 수정 (PUT /users/:id)
   @Put(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: '특정 유저 정보 전체 수정' })
   @ApiResponse({
     status: 200,
@@ -84,6 +93,7 @@ export class UsersController {
 
   // 특정 유저 정보 일부 수정 (PATCH /users/:id)
   @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: '특정 유저 정보 일부 수정' })
   @ApiResponse({
     status: 200,
@@ -99,6 +109,7 @@ export class UsersController {
 
   // 특정 유저 삭제 (DELETE /users/:id)
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: '특정 유저 삭제' })
   @ApiResponse({
     status: 200,
