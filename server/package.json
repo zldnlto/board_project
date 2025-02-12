@@ -32,6 +32,7 @@
     "@types/passport-jwt": "^4.0.1",
     "dotenv": "^16.4.7",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "prisma": "^6.2.1",
