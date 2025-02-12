@@ -1,8 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PartialUpdateUserDto } from './dto/update-user-partial.dto';
 import { UserResponseDto } from './dto/user-response.dto';
@@ -54,20 +52,20 @@ export class UsersService {
       },
     });
 
-    if (!user) return null;
+    if (!user) {
+      return null;
+    }
 
     return user;
   }
 
   // POST 회원가입 (Auth에서 처리함, create는 내부 호출용)
   async create(createUserDto: CreateUserDto) {
-    const passwordHash = await bcrypt.hash(createUserDto.password, 10);
-
     return this.prisma.user.create({
       data: {
         username: createUserDto.username,
         email: createUserDto.email,
-        password: passwordHash, // Prisma의 'password' 필드에 해싱된 비밀번호 저장
+        password: createUserDto.password,
       },
     });
   }
