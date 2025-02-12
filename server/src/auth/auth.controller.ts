@@ -1,19 +1,20 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { LoginDto } from './dto/login.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { SignupDto } from './dto/signup.dto';
 
-@ApiTags('auth') // Swagger 문서 태그
-@Controller('auth') // 엔드포인트: /auth
+@ApiTags('auth')
+@Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {} // AuthService 주입
+  constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
+  @Post('signup')
   @ApiOperation({ summary: '회원가입' })
   @ApiResponse({ status: 201, description: '회원가입 성공' })
   @ApiResponse({ status: 400, description: '잘못된 요청' })
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() SignupDto: SignupDto) {
+    return this.authService.signup(SignupDto);
   }
 
   @Post('login')
