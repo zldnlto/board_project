@@ -39,6 +39,25 @@ export class UsersService {
       createdAt: user.createdAt,
     };
   }
+  async findOneByEmail(
+    email: string,
+    includePassword = false,
+  ): Promise<(UserResponseDto & { password?: string }) | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        createdAt: true,
+        password: includePassword,
+      },
+    });
+
+    if (!user) return null;
+
+    return user;
+  }
 
   // POST 회원가입 (Auth에서 처리함, create는 내부 호출용)
   async create(createUserDto: CreateUserDto) {
