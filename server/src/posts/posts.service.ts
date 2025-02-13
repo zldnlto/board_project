@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { PostResponseDto } from './dto/post-response.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
@@ -8,8 +9,11 @@ export class PostsService {
   constructor(private readonly prisma: PrismaService) {}
 
   // 게시글 생성 (POST /posts)
-  async create(authorId: number, createPostDto: CreatePostDto) {
-    return this.prisma.post.create({
+  async create(
+    authorId: number,
+    createPostDto: CreatePostDto,
+  ): Promise<PostResponseDto> {
+    const post = await this.prisma.post.create({
       data: {
         title: createPostDto.title,
         content: createPostDto.content,
@@ -17,6 +21,15 @@ export class PostsService {
         authorId,
       },
     });
+    return {
+      id: post.id,
+      title: post.title,
+      content: post.content,
+      category: post.category,
+      authorId: post.authorId,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    };
   }
 
   // 모든 게시글 조회 (GET /posts)

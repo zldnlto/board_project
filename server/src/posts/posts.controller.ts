@@ -1,6 +1,7 @@
 import { UserResponseDto } from '@/user/dto/user-response.dto';
 import {
   Body,
+  Controller,
   Delete,
   Get,
   Param,
@@ -17,10 +18,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
+import { PostResponseDto } from './dto/post-response.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsService } from './posts.service';
 
 @ApiTags('posts')
+@Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
@@ -32,6 +35,7 @@ export class PostsController {
   @ApiResponse({
     status: 201,
     description: '게시글이 성공적으로 작성되었습니다.',
+    type: PostResponseDto,
   })
   async create(@Request() req, @Body() createPostDto: CreatePostDto) {
     const user = req.user as UserResponseDto;
