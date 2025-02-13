@@ -78,9 +78,30 @@ export class PostsService {
   }
 
   // 게시글 삭제 (DELETE /posts/:id)
-  async remove(id: number) {
-    return this.prisma.post.delete({
+  async remove(id: number): Promise<{
+    message: string;
+    deletedPost: Omit<PostResponseDto, 'author' | 'content'> & {
+      deletedAt: Date;
+    };
+  }> {
+    const deletedPost = await this.prisma.post.delete({
       where: { id },
+      select: {
+        id: true,
+        title: true,
+        category: true,
+        authorId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
+
+    return {
+      message: '게시글이 성공적으로 삭제되었습니다.',
+      deletedPost: {
+        ...deletedPost,
+        deletedAt: new Date(),
+      },
+    };
   }
 }

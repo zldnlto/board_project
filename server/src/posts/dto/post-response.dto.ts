@@ -1,3 +1,4 @@
+import { UserResponseDto } from '@/user/dto/user-response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PostResponseDto {
@@ -20,18 +21,28 @@ export class PostResponseDto {
   @ApiProperty({ example: '자유', description: '카테고리', required: false })
   category?: string;
 
-  @ApiProperty({ example: 3, description: '작성자 ID' })
+  @ApiProperty({ example: 14, description: '작성자 ID' })
   authorId: number;
 
+  @ApiProperty({ description: '게시글 작성자 정보', type: UserResponseDto })
+  author?: UserResponseDto;
+
   @ApiProperty({
-    example: '2025-02-13T12:00:00.000Z',
+    example: '2025-02-13T14:26:13.291Z',
     description: '게시글 생성일',
   })
   createdAt: Date;
 
   @ApiProperty({
-    example: '2025-02-13T12:10:00.000Z',
+    example: '2025-02-13T14:26:13.291Z',
     description: '게시글 수정일',
   })
   updatedAt: Date;
+
+  @ApiProperty({
+    example: '2025-02-14T10:30:00.000Z',
+    description: '게시글 삭제 시간',
+    required: false,
+  })
+  deletedAt?: Date;
 }
