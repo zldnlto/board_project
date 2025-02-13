@@ -35,7 +35,16 @@ export class PostsService {
   // 모든 게시글 조회 (GET /posts)
   async findAll() {
     return this.prisma.post.findMany({
-      include: { author: true }, // 작성자 정보 포함
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            createdAt: true,
+          },
+        },
+      },
     });
   }
 
@@ -43,7 +52,16 @@ export class PostsService {
   async findOne(id: number) {
     const post = await this.prisma.post.findUnique({
       where: { id },
-      include: { author: true },
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            createdAt: true,
+          },
+        },
+      },
     });
     if (!post) {
       throw new NotFoundException(`🚫 게시글 ID ${id}을 찾을 수 없습니다.`);
