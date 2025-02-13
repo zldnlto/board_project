@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { GetPostsDto } from './dto/get-posts.dto';
 import { PostResponseDto } from './dto/post-response.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
@@ -33,19 +34,40 @@ export class PostsService {
   }
 
   // 모든 게시글 조회 (GET /posts)
-  async findAll() {
-    return this.prisma.post.findMany({
+  async findAll(
+    query: GetPostsDto,
+  ): Promise<{ posts: PostResponseDto[]; total: number }> {
+    const { page = 1, limit = 10, author, search } = query;
+    const skip = (page - 1) * limit; // 페이지네이션 offset
+
+    const whereCondition: any = {}; // 동적 where 조건 생성
+
+    if (author) {
+      whereCondition.authorId = author;
+    }
+
+    if (search) {
+      whereCondition.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { content: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    const total = await this.prisma.post.count({ where: whereCondition });
+
+    const posts = await this.prisma.post.findMany({
+      where: whereCondition,
       include: {
         author: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            createdAt: true,
-          },
+          select: { id: true, username: true, email: true, createdAt: true },
         },
       },
+      take: limit, // 페이지당 게시글 개수
+      skip, // 조회 시작 위치 (offset)
+      orderBy: { createdAt: 'desc' }, // 최신 게시글 순
     });
+
+    return { posts, total };
   }
 
   // 특정 게시글 조회 (GET /posts/:id)
