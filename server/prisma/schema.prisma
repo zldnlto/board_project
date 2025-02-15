@@ -19,8 +19,14 @@ model User {
   email     String    @unique
   password  String
   createdAt DateTime  @default(now())
+  role      Role      @default(USER)
   post      Post[]
   comments  Comment[]
+}
+
+enum Role {  
+  USER
+  ADMIN
 }
 
 model Post {
